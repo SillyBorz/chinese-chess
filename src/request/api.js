@@ -4,12 +4,18 @@
  * @version 1.0
  */
 
-import axios from "./http.js";
+import axios from './http.js';
 export default {
   signin(params) {
-    return axios.get(`/api/user/${params}`);
+    return axios.post('/api/user/signin', params);
   },
   signup(params) {
-    return axios.post("/api/user", params);
+    return axios.post('/api/user/signup', params);
+  },
+  updataUserInfo(id, params) {
+    return axios.put(`/api/user/${id}`, params);
+  },
+  checkUser(params) {
+    return axios.post('/api/user/checkUser', params);
   }
 };

@@ -1,22 +1,24 @@
 <!--  -->
 <template>
   <div class="signin">
-    <form 
-      action="/api/signin"
-      @submit="submit"
-      class="form">
-      <input class="input" type="text">
-      <input class="input" type="password">
-      <button @click="submit">登录</button>
-    </form>
+    <van-cell-group>
+      <van-field v-model="params.username" placeholder="请输入用户名" />
+      <van-field v-model="params.password" placeholder="请输入密码" />
+    </van-cell-group>
+    <mu-button color="primary" @click="submit">登录</mu-button>
   </div>
 </template>
 
 <script>
 export default {
-  name: "signin",
+  name: 'signin',
   data() {
-    return {};
+    return {
+      params: {
+        username: 'wangtao11',
+        password: '123456'
+      }
+    };
   },
 
   props: {},
@@ -24,25 +26,27 @@ export default {
   computed: {},
 
   created() {
-    this.$http.signup({username: 'wangtao', password: '123456'})
+    /* this.$http.signup({username: 'wangtao', password: '123456'})
     .then(res=>{
       console.log(res);
-    })
-    this.$http.signin('5d0ca09b6d720807345c0611')
-    .then(res=>{
-      console.log(res);
-    })
+    }) */
   },
 
-  mounted() {
-    
-  },
+  mounted() {},
 
   watch: {},
 
   methods: {
-    submit(e){
-
+    submit() {
+      // let sha256 = require("js-sha256").sha256;
+      // let md5 = require('js-md5');
+      // let password = md5(sha256(this.params.password));
+      this.$http.signin(this.params).then(res => {
+        if (res.code>0) {
+          this.$router.push({name: 'test'})
+          sessionStorage.setItem('token', res.data)
+        }
+      });
     }
   },
 
@@ -51,12 +55,11 @@ export default {
 </script>
 
 <style scoped lang="less">
-.form{
+.form {
   display: block;
   width: 500px;
   margin: 0 auto;
-  .input{
-    
+  .input {
   }
 }
 </style>

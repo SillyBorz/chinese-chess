@@ -5,7 +5,7 @@
       style="display: block;width: 100vw;background: #d3c19a;"
       ref="chessboard"
     ></canvas>
-    <div ref="pieces" class="pieces">
+    <!-- <div ref="pieces" class="pieces">
       <ul v-for="(xArr, y) in arrPoint" :key="y">
         <li
           v-for="(piece, x) in xArr"
@@ -20,24 +20,24 @@
           {{ piece[1] }}
         </li>
       </ul>
-    </div>
+    </div> -->
   </div>
 </template>
 <script>
 export default {
-  name: "index",
+  name: 'index',
   data() {
     return {
       arrPoint: Array.from(Array(10), (v, y) =>
         Array.from(Array(9), (k, x) => {
           // * 初始化棋子位置
-          if (y === 0) return "红" + "車馬相仕帥仕相馬車"[x];
-          if (y === 9) return "黑" + "車馬象士将士象馬車"[x];
-          if (y === 2 && (x === 1 || x === 7)) return "红炮";
-          if (y === 7 && (x === 1 || x === 7)) return "黑炮";
-          if (y === 3 && x % 2 === 0) return "红兵";
-          if (y === 6 && x % 2 === 0) return "黑卒";
-          return "";
+          if (y === 0) return '红' + '車馬相仕帥仕相馬車'[x];
+          if (y === 9) return '黑' + '車馬象士将士象馬車'[x];
+          if (y === 2 && (x === 1 || x === 7)) return '红炮';
+          if (y === 7 && (x === 1 || x === 7)) return '黑炮';
+          if (y === 3 && x % 2 === 0) return '红兵';
+          if (y === 6 && x % 2 === 0) return '黑卒';
+          return '';
         })
       ),
       pitchOn: {}, // * 当前选中的棋子
@@ -51,14 +51,16 @@ export default {
 
   computed: {},
 
-  created() {},
+  created() {
+  },
 
   mounted() {
+    return
     let chessboard = this.$refs.chessboard;
     // * 棋盘宽高：780*860
     chessboard.width = 780;
     chessboard.height = 860;
-    let ctx = chessboard.getContext("2d");
+    let ctx = chessboard.getContext('2d');
 
     /**
      * # 外层盒子
@@ -67,9 +69,9 @@ export default {
      * * 盒子宽高：宽 80*8 + 2*9 + 4*2 + 4 ==> 670 高 80*9 + 2*10  4*2 + 4 ==> 752
      * * 距顶部距离：(860 - 752)/2 ==> 54 距左：(780 - 670)/2 ==> 55
      */
-    ctx.lineJoin = "round";
+    ctx.lineJoin = 'round';
     ctx.lineWidth = 4; // * 线的宽度是向两边延伸的
-    ctx.strokeStyle = "#2d241b"; // * 矩形描边
+    ctx.strokeStyle = '#2d241b'; // * 矩形描边
     ctx.strokeRect(55, 54, 670, 752);
 
     /**
@@ -116,7 +118,7 @@ export default {
       if (_x === undefined) {
         // * 判断是否选中过棋子
         // * 判断是否正确选中棋子
-        if ((this.isRed && t[0] === "红") || (!this.isRed && t[0] === "黑"))
+        if ((this.isRed && t[0] === '红') || (!this.isRed && t[0] === '黑'))
           return void (this.pitchOn = { x, y });
         else return;
       }
@@ -125,9 +127,9 @@ export default {
         // * 再次点击己方棋子，切换选中
         return void (this.pitchOn = { x, y });
       if (this.rule(x, y, t, _x, _y, _t)) {
-        this.arrPoint[_y][_x] = "";
+        this.arrPoint[_y][_x] = '';
         this.$set(this.arrPoint[y], x, _t);
-        if (t[1] === "帥" || t[1] === "将")
+        if (t[1] === '帥' || t[1] === '将')
           // * 判断输赢
           return void alert(`对局结束，${_t[0]}方胜`);
         this.isRed = !this.isRed;
@@ -146,7 +148,7 @@ export default {
           return false;
       }
       switch (_t[1]) {
-        case "炮":
+        case '炮':
           if (y !== _y && x !== _x) return false; // * 只能直着走
           // * 判断路径和落点没有棋子时，进行落子
           if (this.pathPieces(x, y, _x, _y).length === 0 && !t) return true;
@@ -155,13 +157,13 @@ export default {
             return true;
           break;
 
-        case "車":
+        case '車':
           if (y !== _y && x !== _x) return false;
           if (this.pathPieces(x, y, _x, _y).length === 0 && t[0] !== _t[0])
             return true;
           break;
 
-        case "馬":
+        case '馬':
           if (Math.abs(y - _y) === 2 && Math.abs(x - _x) === 1) {
             if (y > _y && this.arrPoint[_y + 1][_x]) return false;
             else if (y < _y && this.arrPoint[_y - 1][_x]) return false;
@@ -174,7 +176,7 @@ export default {
           }
           break;
 
-        case "相":
+        case '相':
           if (Math.abs(y - _y) === 2 && Math.abs(x - _x) === 2) {
             // * 判断中间是否有棋子
             if (y > _y && x > _x && this.arrPoint[_y + 1][_x + 1]) return false;
@@ -188,7 +190,7 @@ export default {
           }
           break;
 
-        case "象":
+        case '象':
           if (Math.abs(y - _y) === 2 && Math.abs(x - _x) === 2) {
             if (y > _y && x > _x && this.arrPoint[_y + 1][_x + 1]) return false;
             else if (y < _y && x < _x && this.arrPoint[_y - 1][_x - 1])
@@ -201,7 +203,7 @@ export default {
           }
           break;
 
-        case "仕":
+        case '仕':
           if (y >= 0 && y <= 2 && x >= 3 && x <= 5) {
             // * 判断落点是否在田中
             if (Math.abs(y - _y) === 1 && Math.abs(x - _x) === 1) {
@@ -211,7 +213,7 @@ export default {
           }
           break;
 
-        case "士":
+        case '士':
           if (y >= 7 && y <= 9 && x >= 3 && x <= 5) {
             if (Math.abs(y - _y) === 1 && Math.abs(x - _x) === 1) {
               if (t[0] !== _t[0]) return true;
@@ -219,21 +221,21 @@ export default {
           }
           break;
 
-        case "兵":
+        case '兵':
           if (_y <= 4 && x !== _x) return false; // * 未过河时不能两边走
           if (y !== _y && x !== _x) return false;
           if (y - _y !== 1 && Math.abs(x - _x) !== 1) return false;
           if (y >= _y && t[0] !== _t[0]) return true;
           break;
 
-        case "卒":
+        case '卒':
           if (_y >= 5 && x !== _x) return false; // * 未过河时不能两边走
           if (y !== _y && x !== _x) return false;
           if (_y - y !== 1 && Math.abs(x - _x) !== 1) return false;
           if (_y >= y && t[0] !== _t[0]) return true;
           break;
 
-        case "将":
+        case '将':
           if (y !== _y && x !== _x) return false;
           if (Math.abs(y - _y) !== 1 && Math.abs(x - _x) !== 1) return false;
           if (y >= 7 && y <= 9 && x >= 3 && x <= 5 && t[0] !== _t[0]) {
@@ -243,7 +245,7 @@ export default {
           }
           break;
 
-        case "帥":
+        case '帥':
           if (y !== _y && x !== _x) return false;
           if (Math.abs(y - _y) !== 1 && Math.abs(x - _x) !== 1) return false;
           if (y >= 0 && y <= 2 && x >= 3 && x <= 5 && t[0] !== _t[0]) {
@@ -267,7 +269,7 @@ export default {
       // * 获取路径上的棋子
       let max,
         min,
-        pieces = "";
+        pieces = '';
       if (y === _y) {
         x > _x ? ((max = x), (min = _x)) : ((max = _x), (min = x));
         for (let i = min; ++i < max; pieces += this.arrPoint[y][i]);

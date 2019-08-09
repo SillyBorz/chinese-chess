@@ -4,6 +4,18 @@
   </div>
 </template>
 
+<script>
+export default {
+  name: 'app',
+  created(){
+    this.$http.checkUser()
+    .then(res=>{
+      sessionStorage.setItem('id', res.data._id)
+    })
+  }
+}
+</script>
+
 <style lang="less">
 .fl {
   float: left;
@@ -16,7 +28,7 @@
 /*css为clearfix，清除浮动*/
 .clearfix::before,
 .clearfix::after {
-  content: "";
+  content: '';
   height: 0;
   line-height: 0;
   display: block;
